@@ -1,0 +1,20 @@
+# API 키와 환경 설정
+.env
+.env.*
+!.env.example
+
+# Python 임시 파일
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 작업용 임시 파일
+/tmp/
+
+# 실험 원본 결과와 재개 백업
+/Code/results/
+/Code/minimal_results/
+/Code/accuracy_results/
+/Code/accuracy_recovered/
+/Code/mujin_results_261111/
