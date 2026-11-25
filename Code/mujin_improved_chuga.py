@@ -54,7 +54,8 @@ Dictionary와 History를 참고하여 Input의 A(정답 의미)를 오답 의미
 구분할 수 있는 단어를 만들어라. Words에 있는 단어만 이어 붙여라.
 반복 사용은 허용된다. 설명, 공백, 문장 부호 없이 단어 하나만 출력하라.
 완벽히 표현하기 어렵더라도 반드시 허용된 단어들로 결과를 만들어라.
-판단 과정과 추론 요약은 가능한 한 한국어로 작성하되, 최종 답변은 단어 하나만 출력하라."""
+판단 과정과 추론 요약은 가능한 한 한국어로 작성하되, 최종 답변은 단어 하나만 출력하라.
+단어는 반드시 16자 이하여야 한다."""
 RECEIVER_INSTRUCTIONS = """너는 모르는 언어를 해석하는 receiver다.
 Dictionary와 History를 참고하여 Input의 단어가 뜻하는 의미를 보기에서 골라라.
 출력은 정답 번호 하나만 써라. 설명이나 문장 부호를 붙이지 마라.
@@ -413,7 +414,7 @@ def run(client, data_path, output_dir, turns=TURNS, seed=42, resume_report=None,
                 or record['answer_meaning'] != record['choices'][record['answer_number'] - 1]
                 or (record['status'] != 'completed' and index != len(report['turns']))):
             raise ValueError('재개 기록의 턴 번호·보기·정답 또는 완료 순서가 올바르지 않습니다.')
-        if record['status'] == 'completed' and record['correct']:
+        if record['status'] == 'completed' and record['sender_valid']:
             history.append({'word': record['sender']['raw_output'].strip(), 'meaning': record['answer_meaning']})
     used = {t['answer_meaning'] for t in report['turns']}
     remaining = [m for m in pool if m not in used]
@@ -469,7 +470,7 @@ def run(client, data_path, output_dir, turns=TURNS, seed=42, resume_report=None,
                 sounds.append("딥")
                 report['settings']['sounds'] = sounds
             
-            record['sender_valid'] = bool(re.fullmatch(sound_pattern, word)) and record['sender']['response_status'] == 'completed'
+            record['sender_valid'] = bool(re.fullmatch(sound_pattern, word)) and len(word) <= 16 and record['sender']['response_status'] == 'completed'
             # Receiver에게 현재 턴 정답/정답 번호는 전달하지 않는다.
             receiver_prompt = {
                 'instructions': report['settings']['receiver_instructions'],
