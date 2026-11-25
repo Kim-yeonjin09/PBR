@@ -464,9 +464,7 @@ def run(client, data_path, output_dir, turns=TURNS, seed=42, resume_report=None,
             word = record['sender']['raw_output'].strip()
             sound_pattern = r'(?:' + '|'.join(re.escape(sound) for sound in sounds) + r')+'
             
-            # 10개 넘으면 '딥' 추가
-            word = record['sender']['raw_output'].strip()
-
+            # 10개 이상이면 '딥' 추가
             if len(word) == 10 and "딥" not in sounds:
                 sounds.append("딥")
                 report['settings']['sounds'] = sounds
